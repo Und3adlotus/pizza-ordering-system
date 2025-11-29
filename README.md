@@ -19,11 +19,8 @@ npm install
 ### Run the server in dev mode
 npm run dev
 
-Server runs at:
-http://localhost:3000
-
 ## 📁 Project Structure
-cowabunga-pizza/
+pizza ordering app/
   server.js
   package.json
   /routes
