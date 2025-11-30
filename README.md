@@ -3,7 +3,7 @@
 This is the beginning of our full-stack pizza ordering website for CS492.  
 We built the planning docs in the previous course, and now this repo is the actual working version of the app.
 
-Right now we have a clean MVP up and running: Express server, EJS layouts, basic routing, and a simple UI skeleton. Nothing fancy yet, but the foundation is solid and everything loads without errors. We’ll build out features a sprint at a time.
+Right now we have a clean MVP up and running: EJS layouts, basic routing, and a simple UI skeleton. Nothing fancy yet, but the foundation is solid and everything loads without errors. We’ll build out features a sprint at a time.
 
 ---
 
