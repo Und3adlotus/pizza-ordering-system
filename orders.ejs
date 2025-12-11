@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>All Orders</title>
+</head>
+<body>
+  <h1>All Orders</h1>
+
+  <% if (!orders || !orders.length) { %>
+    <p>No orders yet.</p>
+  <% } else { %>
+    <table border="1" cellpadding="6">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Customer</th>
+          <th>Pizza</th>
+          <th>Quantity</th>
+          <th>Base Price</th>
+          <th>Toppings</th>
+          <th>Toppings Cost</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% orders.forEach(function(order) { %>
+          <tr>
+            <td><%= order.id %></td>
+            <td><%= order.customerName %></td>
+            <td><%= order.itemName %></td>
+            <td><%= order.quantity %></td>
+            <td>$<%= order.basePrice %></td>
+            <td><%= order.toppings.join(', ') %></td>
+            <td>$<%= order.toppingsCost %></td>
+            <td>$<%= order.total %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } %>
+
+  <p><a href="/order">Place another order</a></p>
+  <p><a href="/">Back to Home</a></p>
+</body>
+</html>

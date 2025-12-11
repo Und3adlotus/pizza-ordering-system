@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Place an Order</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 20px auto;
+      line-height: 1.5;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+    .toppings-container {
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #f9fff9;
+    }
+    .toppings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 6px 12px;
+      margin-top: 8px;
+    }
+    .topping-option {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.95rem;
+    }
+    .topping-price {
+      color: #555;
+      font-size: 0.85rem;
+    }
+    button {
+      margin-top: 20px;
+      padding: 8px 16px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .total-box {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #888;
+      background: #f4f4ff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Place an Order</h1>
+
+  <form method="POST" action="/order">
+    <!-- Customer name -->
+    <label for="customerName">Your Name:</label>
+    <input type="text" id="customerName" name="customerName" required />
+
+    <br /><br />
+
+    <label for="pizzaId">Select Pizza:</label>
+    <select id="pizzaId" name="pizzaId">
+      <% menu.forEach(item => { %>
+        <option value="<%= item.id %>" data-price="<%= item.price %>">
+          <%= item.name %> - $<%= item.price.toFixed(2) %>
+        </option>
+      <% }) %>
+    </select>
+
+    <br /><br />
+
+    <label for="quantity">Quantity:</label>
+    <input type="number" id="quantity" name="quantity" value="1" min="1" />
+
+    <br /><br />
+
+    <div class="toppings-container">
+      <label>Customize Your Pizza (Toppings):</label>
+      <p>Select as many toppings as you want. Each topping adds to the price.</p>
+
+      <div class="toppings-grid">
+        <% if (toppings && toppings.length) { %>
+          <% toppings.forEach(function(topping) { %>
+            <label class="topping-option">
+              <input 
+                type="checkbox" 
+                name="toppings" 
+                value="<%= topping.id %>"
+                data-price="<%= topping.price %>">
+              <span><%= topping.name %></span>
+              <span class="topping-price">+ $<%= topping.price.toFixed(2) %></span>
+            </label>
+          <% }); %>
+        <% } else { %>
+          <p>No toppings available right now.</p>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Live price display -->
+    <div class="total-box">
+      <strong>Price per pizza:</strong>
+      $<span id="pricePerPizza">0.00</span><br />
+      <strong>Estimated total:</strong>
+      $<span id="totalPrice">0.00</span>
+    </div>
+
+    <button type="submit">Submit Order</button>
+  </form>
+
+  <p><a href="/">Back to Home</a></p>
+
+  <script>
+    const pizzaSelect = document.getElementById("pizzaId");
+    const toppingsContainer = document.querySelector(".toppings-container");
+    const quantityInput = document.getElementById("quantity");
+    const pricePerPizzaSpan = document.getElementById("pricePerPizza");
+    const totalPriceSpan = document.getElementById("totalPrice");
+    const toppingCheckboxes = document.querySelectorAll('input[name="toppings"]');
+
+    function updateToppingsUI() {
+      if (!pizzaSelect || !toppingsContainer) return;
+
+      if (pizzaSelect.value === "99") {
+        toppingsContainer.style.border = "2px solid #2ecc71";
+        toppingsContainer.style.background = "#ecfff2";
+      } else {
+        toppingsContainer.style.border = "1px solid #ccc";
+        toppingsContainer.style.background = "#f9fff9";
+      }
+    }
+
+    function calculateTotal() {
+      if (!pizzaSelect || !quantityInput) return;
+
+      const qty = parseInt(quantityInput.value, 10) || 1;
+
+      const selectedOption = pizzaSelect.options[pizzaSelect.selectedIndex];
+      const basePrice = parseFloat(selectedOption.dataset.price || "0");
+
+      let toppingsPerPizza = 0;
+      toppingCheckboxes.forEach(cb => {
+        if (cb.checked) {
+          toppingsPerPizza += parseFloat(cb.dataset.price || "0");
+        }
+      });
+
+      const pricePerPizza = basePrice + toppingsPerPizza;
+      const grandTotal = pricePerPizza * qty;
+
+      pricePerPizzaSpan.textContent = pricePerPizza.toFixed(2);
+      totalPriceSpan.textContent = grandTotal.toFixed(2);
+    }
+
+    pizzaSelect.addEventListener("change", () => {
+      updateToppingsUI();
+      calculateTotal();
+    });
+
+    quantityInput.addEventListener("input", calculateTotal);
+    toppingCheckboxes.forEach(cb => cb.addEventListener("change", calculateTotal));
+    updateToppingsUI();
+    calculateTotal();
+  </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pizza Ordering System</title>
+</head>
+<body>
+  <h1>Welcome to the Pizza Ordering System</h1>
+  <h2>Menu</h2>
+  <ul>
+    <% menu.forEach(item => { %>
+      <li><%= item.name %> - $<%= item.price.toFixed(2) %></li>
+    <% }) %>
+  </ul>
+
+  <p><a href="/order">Place an Order</a></p>
+  <p><a href="/orders">View All Orders</a></p>
+</body>
+</html>
